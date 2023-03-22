@@ -1,0 +1,118 @@
+
+$err-color: #f06292;
+
+@mixin vertical-list {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+@mixin horizantal-list{
+    display: flex;
+    max-width: 20rem;
+    justify-content: space-between;
+}
+
+
+*{
+    margin:0;
+    padding:0;
+
+
+.container{
+
+   position: relative;
+   padding: 1.5rem;
+
+.menu {
+        padding-top: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid black;
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        
+
+    }
+        
+                .btns {
+                    display: flex;
+                    gap: 1rem;
+                    align-items: center;
+                    button{
+                        padding:3px 5px;
+                        text-transform: uppercase;
+                    }
+                }
+        
+                .f_btns {
+                    position: absolute;
+                    right: 1.3rem;
+                    top: 3.5rem;
+                }
+        
+                .box {
+                    @include horizantal-list;
+                    margin-bottom: 1rem;
+                }
+                .section-w{
+                    max-width: 20rem;
+                    text-align: center;
+                    margin-bottom: 1rem;
+                    font-weight: bold;
+                }
+                .inp-err {
+                    @include vertical-list;
+                }
+        
+                .error {
+                    width: 15rem;
+                    text-align: center;
+                    color: $err-color;
+                }
+        
+                .type-switcher {
+                    @include horizantal-list;
+                    margin: 1rem;
+                }
+}
+.products {
+    padding-bottom: 2.5rem;
+    border-bottom: 2px solid black;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+
+}
+.single-product {
+    height: 7rem;
+    margin: 15px;
+    padding: 1rem;
+    display: flex;
+    border: 2px solid black;
+    position: relative;
+
+}
+ .delete-checkbox {
+     align-self: flex-start;
+ }
+.product-info {
+    position: absolute;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    
+}
+.products-slider{
+   
+    width: 50rem;
+    margin: 0 auto;
+    
+    
+}
+
+}

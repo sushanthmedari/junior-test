@@ -1,0 +1,45 @@
+services:
+    # nginx
+    web:
+        image: nginx:latest
+        ports:
+            - "8080:80"
+        volumes:
+            - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    # php
+    app:
+        build:
+            dockerfile: ./php/Dockerfile
+        volumes:
+            - /var/www/html/vendor
+            - ./app:/var/www/html
+    # mysql
+    db:
+        image: mysql:8.0
+        volumes:
+            - "./sql:/docker-entrypoint-initdb.d"
+        ports:
+            - "4406:3306"
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_USER: user
+            MYSQL_PASSWORD: secret
+            MYSQL_DATABASE: docker-php
+
+     # react
+    frontend:
+      build:
+        dockerfile: ./react/Dockerfile
+      tty: true
+      ports:
+        - 3000:3000
+      volumes:
+        - ./react/src:/src  
+
+# volumes:
+#     mysqldata:
+ 
+# networks:
+#   app:
+#     driver: bridge
