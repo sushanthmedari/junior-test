@@ -58,4 +58,21 @@ abstract class Controller
   }
 
   abstract public function save($pdo);
+
+  public function getResponse(bool $success, string $string): void
+  {
+      if ($success & $string === 'addProducts') {
+        http_response_code(201);
+        echo $this->getProducts();
+      } else if ($success & $string === 'deleteProducts') {
+        http_response_code(200);
+        echo json_encode(['message' => 'Products deleted successfully']);
+      } else if (!$success & $string === 'deleteProducts') {
+        http_response_code(500);
+        echo json_encode(['message' => 'Failed to delete products']);
+      } else if (!$success & $string === 'addProducts') {
+        http_response_code(500);
+        echo json_encode(['message' => 'Failed to add product']);
+      }
+  }
 }

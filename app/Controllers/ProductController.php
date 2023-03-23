@@ -32,57 +32,22 @@ class ProductController extends Controller
 
 
 
-    public function save($pdo)
+    public function save($pdo): void
     {
     }
 
-    public function handleRequest()
+    public function handleRequest(): void
     {
-
         self::getHeaders();
-        $request_method = $_SERVER["REQUEST_METHOD"];
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-        switch ($request_method) {
-
+        switch ($requestMethod) {
             case 'POST':
-                $data = json_decode(file_get_contents("php://input"), true);
-
-
-                $this->__set('name', $data['name'] ?? '');
-                $this->__set('price', $data['price'] ?? '');
-                $this->__set('sku', $data['sku'] ?? '');
-                $this->__set('product_type', $data['product_type'] ?? '');
-                $this->__set('size', isset($data['size']) ? $data['size'] : null);
-                $this->__set('weight', isset($data['weight']) ? $data['weight'] : null);
-                $this->__set('height', isset($data['height']) ? $data['height'] : null);
-                $this->__set('width', isset($data['width']) ? $data['width'] : null);
-                $this->__set('lenght', isset($data['lenght']) ? $data['lenght'] : null);
-
-                if (
-                    isset($data['action']) && $data['action'] === 'addProducts'
-                ) {
-                    $dvd = new DvdController($this->sku, $this->name, $this->price, $this->product_type, $this->height, $this->width, $this->lenght, $this->weight, $this->size, $this->getPdo());
-                    $book = new BookController($this->sku, $this->name, $this->price, $this->product_type, $this->height, $this->width, $this->lenght, $this->weight, $this->size, $this->getPdo());
-                    $furniture = new FurnitureController($this->sku, $this->name, $this->price, $this->product_type, $this->height, $this->width, $this->lenght, $this->weight, $this->size, $this->getPdo());
-
-                    if (($dvd || $furniture || $book) === true) {
-                        $this->response(true, $data['action']);
-                    } else {
-                        $this->response(false, $data['action']);
-                    }
-                } else if (isset($data['action']) && $data['action'] === 'deleteProducts' && isset($data['ids'])) {
-                    $ids = $data['ids'];
-                    $success = $this->deleteProducts((array)$ids);
-                    $this->response($success, $data['action']);
-                } else {
-                    http_response_code(400);
-                    echo json_encode(['message' => 'Invalid request parameters']);
-                }
+                $this->handlePostRequest();
                 break;
 
-
             case 'GET':
-                $this->getProducts();
+                echo $this->getProducts();
                 break;
 
             default:
@@ -92,22 +57,44 @@ class ProductController extends Controller
         }
     }
 
-
-
-    public function response(bool $success, string $string)
+    private function handlePostRequest(): void
     {
-        if ($success & $string === 'addProducts') {
-            http_response_code(201);
-            $this->getProducts();
-        } else if ($success & $string === 'deleteProducts') {
-            http_response_code(200);
-            echo json_encode(['message' => 'Products deleted successfully']);
-        } else if (!$success & $string === 'deleteProducts') {
-            http_response_code(500);
-            echo json_encode(['message' => 'Failed to delete products']);
-        } else if (!$success & $string === 'addProducts') {
-            http_response_code(500);
-            echo json_encode(['message' => 'Failed to add product']);
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        if (isset($data['action']) && $data['action'] === 'addProducts') {
+            $success = $this->addProducts($data);
+            $this->getResponse($success, $data['action']);
+        } else if (isset($data['action']) && $data['action'] === 'deleteProducts' && isset($data['ids'])) {
+            $ids = $data['ids'];
+            $success = $this->deleteProducts((array)$ids);
+            $this->getResponse($success, $data['action']);
+        } else {
+            http_response_code(400);
+            echo json_encode(['message' => 'Invalid request parameters']);
         }
     }
+
+    private function addProducts(array $data): bool
+    {
+        $this->__set('name', $data['name'] ?? '');
+        $this->__set('price', $data['price'] ?? '');
+        $this->__set('sku', $data['sku'] ?? '');
+        $this->__set('product_type', $data['product_type'] ?? '');
+        $this->__set('size', isset($data['size']) ? $data['size'] : null);
+        $this->__set('weight', isset($data['weight']) ? $data['weight'] : null);
+        $this->__set('height', isset($data['height']) ? $data['height'] : null);
+        $this->__set('width', isset($data['width']) ? $data['width'] : null);
+        $this->__set('lenght', isset($data['lenght']) ? $data['lenght'] : null);
+
+        $dvd = new DvdController($this->sku, $this->name, $this->price, $this->product_type, $this->height, $this->width, $this->lenght, $this->weight, $this->size, $this->getPdo());
+        $book = new BookController($this->sku, $this->name, $this->price, $this->product_type, $this->height, $this->width, $this->lenght, $this->weight, $this->size, $this->getPdo());
+        $furniture = new FurnitureController($this->sku, $this->name, $this->price, $this->product_type, $this->height, $this->width, $this->lenght, $this->weight, $this->size, $this->getPdo());
+        if (($dvd || $furniture || $book) === true) {
+            return true;
+        }
+        return false;
+    }
+
+
+   
 }
