@@ -25,7 +25,7 @@ function SamplePrevArrow(props) {
     />
   );
 }
-function ProductSlider({ apiData, checkedIds, setCheckedIds}) {
+function ProductSlider({ apiData}) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -36,10 +36,6 @@ function ProductSlider({ apiData, checkedIds, setCheckedIds}) {
       }))
     );
   }, [apiData]);
-
-  useEffect(() => {
-    setCheckedIds(products.filter((product) => product.isChecked).map((product) => product.id));
-  }, [products, setCheckedIds]);
 
   const handleProductCheckBox = (id, isChecked) => {
     const updatedProducts = products.map((product) => {
@@ -89,7 +85,6 @@ function ProductSlider({ apiData, checkedIds, setCheckedIds}) {
               key={product.id}
               {...product}
               handleProductCheckBox={handleProductCheckBox}
-              isDeleted={checkedIds.includes(product.id)}
             />
           ))}
         </div>

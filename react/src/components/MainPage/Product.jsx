@@ -14,6 +14,7 @@ function Product(props) {
     }
   }
 
+
   return (
     <div className="single-product">
       <input type="checkbox" className="delete-checkbox" name={`${props?.id}`} value={props?.id} checked={props.isChecked} onChange={handleCheckChange} />

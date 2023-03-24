@@ -5,7 +5,6 @@ import ProductSlider from './ProductSlider';
 import '../components.scss';
 
 function ProductList({ apiData, setApiData }) {
-  const [checkedIds, setCheckedIds] = useState([]);
 
   const removeData = (deleteIds) => {
     const updatedData = apiData.filter((product) => !deleteIds.includes(product.id));
@@ -24,7 +23,7 @@ function ProductList({ apiData, setApiData }) {
         </nav>
         <div className='products-slider'>
           {apiData.length > 0 ? 
-            <ProductSlider apiData={apiData} checkedIds={checkedIds} setCheckedIds={setCheckedIds}/> 
+            <ProductSlider apiData={apiData}/> 
             : "No Products available. Click the Add button to add some products."
           } 
         </div>
