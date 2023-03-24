@@ -76,15 +76,15 @@ class ProductController extends Controller
 
     private function addProducts(array $data): bool
     {
-        $this->__set('name', $data['name'] ?? '');
-        $this->__set('price', $data['price'] ?? '');
-        $this->__set('sku', $data['sku'] ?? '');
-        $this->__set('product_type', $data['product_type'] ?? '');
-        $this->__set('size', isset($data['size']) ? $data['size'] : null);
-        $this->__set('weight', isset($data['weight']) ? $data['weight'] : null);
-        $this->__set('height', isset($data['height']) ? $data['height'] : null);
-        $this->__set('width', isset($data['width']) ? $data['width'] : null);
-        $this->__set('lenght', isset($data['lenght']) ? $data['lenght'] : null);
+        $this->__set('name', htmlspecialchars($data['name'] ?? ''));
+        $this->__set('price', filter_var($data['price'] ?? '', FILTER_SANITIZE_NUMBER_FLOAT));
+        $this->__set('sku', htmlspecialchars($data['sku'] ?? ''));
+        $this->__set('product_type', htmlspecialchars($data['product_type'] ?? ''));
+        $this->__set('size', isset($data['size']) ? filter_var($data['size'], FILTER_SANITIZE_NUMBER_FLOAT) : null);
+        $this->__set('weight', isset($data['weight']) ? filter_var($data['weight'], FILTER_SANITIZE_NUMBER_FLOAT) : null);
+        $this->__set('height', isset($data['height']) ? filter_var($data['height'], FILTER_SANITIZE_NUMBER_FLOAT) : null);
+        $this->__set('width', isset($data['width']) ? filter_var($data['width'], FILTER_SANITIZE_NUMBER_FLOAT) : null);
+        $this->__set('lenght', isset($data['lenght']) ? filter_var($data['lenght'], FILTER_SANITIZE_NUMBER_FLOAT) : null);
 
         $dvd = new DvdController($this->sku, $this->name, $this->price, $this->product_type, $this->height, $this->width, $this->lenght, $this->weight, $this->size, $this->getPdo());
         $book = new BookController($this->sku, $this->name, $this->price, $this->product_type, $this->height, $this->width, $this->lenght, $this->weight, $this->size, $this->getPdo());
